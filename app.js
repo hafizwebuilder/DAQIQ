@@ -20,6 +20,7 @@ const state = {
   visibleTiers: new Set(["HIGH", "MEDIUM", "LOW"]),
   rankingLimit: 10,
   map: null,
+  pathRenderer: null,
   featureLayer: null,
   divergenceLayer: null,
 };
@@ -119,6 +120,7 @@ function initializeMap() {
     zoomControl: false,
     preferCanvas: true,
   });
+  state.pathRenderer = L.canvas({ padding: 0.5 });
 
   L.control.zoom({ position: "topright" }).addTo(state.map);
 
@@ -285,6 +287,7 @@ function styleFeature(feature) {
     : getContinuousColor(Number(props.combined_score || 0));
 
   return {
+    renderer: state.pathRenderer,
     fillColor,
     fillOpacity: isSelected ? 0.86 : 0.72,
     color: isSelected ? "#14202b" : "#cccccc",

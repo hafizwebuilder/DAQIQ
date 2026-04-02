@@ -54,18 +54,61 @@ These files are included for reproducibility and Phase 1 development.
 
 ## Phase 2 integration path
 
-The frontend is intentionally structured so the Phase 2 swap happens at the data layer:
+The frontend is intentionally structured so the Phase 2 swap happens at the data layer only:
 
-1. Load the full-city data into PostGIS as `cafe_cells`
-2. Expose it via `pg_featureserv` with bbox filtering
-3. Update the frontend data source path or endpoint
-4. Replace the summary JSON with the Phase 2 version
-5. Fill the Methodology panel placeholders using the delivered Phase 2 artifacts
+1. Receive the updated full-city `gold_webgis_layer.geojson`
+2. Receive the updated `gold_webgis_summary.json`
+3. Replace the frontend data source path
+4. Keep the same UI code and let the summary metadata reconfigure the legend, colour ramp, and methodology values
+5. Fill the Phase 2 table placeholders when the additional validation artifacts are delivered
 
-Do **not** load the full raw Phase 2 GeoJSON into the browser as a single client-side layer.
+At the updated project scale of roughly 2,200 H3 cells, loading the full GeoJSON directly in the browser via `fetch()` is the intended architecture. No PostGIS, no tile server, and no database are required.
 
 ## Known Phase 1 limitations from the handoff
 
 - Validation-set flags are not present in the current Phase 1 GeoJSON, so the Thesis/Examiner panel shows a fallback note.
 - The tier-stability sensitivity table and AHP-vs-SHAP comparison table are reserved for the Phase 2 artifacts mentioned in the briefing.
-- The current implementation is optimized for Phase 1 development scale. Phase 2 requires the backend strategy described in the briefing.
+- The current implementation already uses direct GeoJSON loading and `Leaflet` with canvas rendering enabled, which should remain smooth at the updated Phase 2 scale.
+
+## Phase 2 Metadata Requirements
+
+For the Methodology panel to populate automatically with zero code changes, the Phase 2 `gold_webgis_summary.json` should include these keys:
+
+- `methodology.ahp.consistency_ratio`
+- `methodology.rf.validation_auc_reported`
+- `methodology.agreement.feature_level_rho`
+- `methodology.data_credits`
+
+The frontend also continues to read these existing summary keys:
+
+- `model_performance.rf_auc_validation`
+- `model_performance.rf_cv_auc_mean`
+- `model_performance.spearman_ahp_rf_cell_level`
+- `features.ahp_clusters`
+- `colour_ramp.stops`
+- `colour_ramp.tier_colours`
+- `suitability_tiers.thresholds`
+
+Recommended JSON shape:
+
+```json
+{
+  "methodology": {
+    "ahp": {
+      "consistency_ratio": 0.0439
+    },
+    "rf": {
+      "validation_auc_reported": 0.918
+    },
+    "agreement": {
+      "feature_level_rho": -0.07
+    },
+    "data_credits": [
+      "OpenStreetMap",
+      "Urban Atlas 2021",
+      "ISTAT",
+      "VIIRS 2024"
+    ]
+  }
+}
+```
