@@ -23,12 +23,12 @@ This implementation follows the Phase 3 briefing for the current Phase 1 handoff
 |-- styles.css
 |-- app.js
 |-- data
-   |-- phase1
-   |   |-- gold_webgis_layer.geojson
-   |   `-- gold_webgis_summary.json
-   `-- phase2
-       `-- README.md
-
+|   |-- phase1
+|   |   |-- gold_webgis_layer.geojson
+|   |   `-- gold_webgis_summary.json
+|   `-- phase2
+|       `-- README.md
+`-- Phase3_Frontend_Briefing.md
 ```
 
 ## Run locally
