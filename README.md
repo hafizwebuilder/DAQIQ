@@ -28,7 +28,7 @@ This implementation follows the Phase 3 briefing for the current Phase 1 handoff
 |   |   `-- gold_webgis_summary.json
 |   `-- phase2
 |       `-- README.md
-`-- Phase3_Frontend_Briefing.md
+
 ```
 
 ## Run locally
